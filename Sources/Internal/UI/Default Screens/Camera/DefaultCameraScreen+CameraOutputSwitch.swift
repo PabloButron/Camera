@@ -17,11 +17,10 @@ extension DefaultCameraScreen { struct CameraOutputSwitch: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            createOutputTypeButton(.video)
-            createOutputTypeButton(.photo)
+         //   createOutputTypeButton(.video)
+         //   createOutputTypeButton(.photo)
         }
         .padding(8)
-        .background(Color(.mijickBackgroundPrimary50))
         .mask(Capsule())
     }
 }}
