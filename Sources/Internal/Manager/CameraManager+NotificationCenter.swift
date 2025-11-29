@@ -10,6 +10,7 @@
 
 
 import Foundation
+import UIKit
 
 @MainActor class CameraManagerNotificationCenter {
     private(set) var parent: CameraManager!
@@ -20,8 +21,20 @@ extension CameraManagerNotificationCenter {
     func setup(parent: CameraManager) {
         self.parent = parent
         NotificationCenter.default.addObserver(self, selector: #selector(handleSessionWasInterrupted), name: .AVCaptureSessionWasInterrupted, object: parent.captureSession)
+        NotificationCenter.default.addObserver(self, selector: #selector(resumeSession), name: UIApplication.willEnterForegroundNotification, object: nil)
+
+    }
+    
+    @objc private func resumeSession() {
+        let session = parent.captureSession
+        DispatchQueue.global(qos: .userInitiated).async {
+            if !session.isRunning {
+                session.startRunning() // Restart session when app enters foreground
+            }
+        }
     }
 }
+
 private extension CameraManagerNotificationCenter {
     @objc func handleSessionWasInterrupted() {
         parent.attributes.lightMode = .off
